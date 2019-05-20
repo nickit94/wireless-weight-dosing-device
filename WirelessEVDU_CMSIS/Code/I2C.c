@@ -7,93 +7,93 @@
 
 void i2cInit(void)
 {
-	/* RCC */
-	RCC->APB1ENR |=	RCC_APB1ENR_I2C1EN;		// Òàêòèðîâàíèå I2C
-	RCC->AHBENR  |= RCC_AHBENR_GPIOBEN;		// GPIOB Clock Enable
+    /* RCC */
+    RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;                         // Ð¢Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ I2C
+    RCC->AHBENR  |= RCC_AHBENR_GPIOBEN;                         // GPIOB Clock Enable
 
-	/* SCL -> PB8 */
-	GPIOB->MODER |=  (GPIO_ALTER << GPIO_MODER_MODER8_Pos);		// Àëüòåðíàòèâíàÿ ôóíêöèÿ
-	GPIOB->OTYPER |= GPIO_OTYPER_OT_8;							// UART1_TX Output push-pull
-	GPIOB->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR8;					// UART1_TX Very high speed
-	GPIOB->AFR[1] |= (0x04 << GPIO_AFRH_AFSEL8_Pos);			// SCL AFIO4
+    /* SCL -> PB8 */
+    GPIOB->MODER |=  (GPIO_ALTER << GPIO_MODER_MODER8_Pos);     // ÐÐ»ÑŒÑ‚ÐµÑ€Ð½Ð°Ñ‚Ð¸Ð²Ð½Ð°Ñ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ñ
+    GPIOB->OTYPER |= GPIO_OTYPER_OT_8;                          // UART1_TX Output push-pull
+    GPIOB->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR8;                   // UART1_TX Very high speed
+    GPIOB->AFR[1] |= (0x04 << GPIO_AFRH_AFSEL8_Pos);            // SCL AFIO4
 
-	/* SDA -> PB9 */
-	GPIOB->MODER |= (GPIO_ALTER << GPIO_MODER_MODER8_Pos);		// Àëüòåðíàòèâíàÿ ôóíêöèÿ
-	GPIOB->OTYPER |= GPIO_OTYPER_OT_9;							// UART1_TX Output push-pull
-	GPIOB->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR9;					// UART1_TX Very high speed
-	GPIOB->AFR[1] |= (0x04 << GPIO_AFRH_AFSEL9_Pos);			// SDA AFIO4
+    /* SDA -> PB9 */
+    GPIOB->MODER |= (GPIO_ALTER << GPIO_MODER_MODER8_Pos);      // ÐÐ»ÑŒÑ‚ÐµÑ€Ð½Ð°Ñ‚Ð¸Ð²Ð½Ð°Ñ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ñ
+    GPIOB->OTYPER |= GPIO_OTYPER_OT_9;                          // UART1_TX Output push-pull
+    GPIOB->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR9;                   // UART1_TX Very high speed
+    GPIOB->AFR[1] |= (0x04 << GPIO_AFRH_AFSEL9_Pos);            // SDA AFIO4
 
-	/* I2C */
-	I2C1->CR1 &= ~I2C_CR1_SMBUS;				// I2C Mode
-	I2C1->CR2 &= ~I2C_CR2_FREQ;					// Óêàçûâàåì ÷àñòîòó òàêòèðîâàíèÿ ìîäóëÿ
-	I2C1->CR2 |= 32 << I2C_CR2_FREQ_Pos; 		// 32 MHz
-	I2C1->CCR &= ~(I2C_CCR_FS | I2C_CCR_DUTY); 	// Êîíôèãóðèðóåì I2C, standart mode, 100 KHz duty cycle 1/2
-	I2C1->CCR |= 156; 							// Çàäàåì ÷àñòîòó ðàáîòû ìîäóëÿ SCL ïî ôîðìóëå 10 000nS/(2*APB1) : 10 000ns/64ns = 156
-	I2C1->TRISE = 33; 							// (1000nS / 31nS)+1 [Standart_Mode = 1000nS, Fast_Mode = 300nS, 1/42MHz = 31nS]s
-	I2C1->CR1 |= I2C_CR1_PE; 					// Âêëþ÷àåì ìîäóëü
+    /* I2C */
+    I2C1->CR1 &= ~I2C_CR1_SMBUS;                // I2C Mode
+    I2C1->CR2 &= ~I2C_CR2_FREQ;                 // Ð£ÐºÐ°Ð·Ñ‹Ð²Ð°ÐµÐ¼ Ñ‡Ð°ÑÑ‚Ð¾Ñ‚Ñƒ Ñ‚Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ Ð¼Ð¾Ð´ÑƒÐ»Ñ
+    I2C1->CR2 |= 32 << I2C_CR2_FREQ_Pos;        // 32 MHz
+    I2C1->CCR &= ~(I2C_CCR_FS | I2C_CCR_DUTY);  // ÐšÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð¸Ñ€ÑƒÐµÐ¼ I2C, standart mode, 100 KHz duty cycle 1/2
+    I2C1->CCR |= 156;                           // Ð—Ð°Ð´Ð°ÐµÐ¼ Ñ‡Ð°ÑÑ‚Ð¾Ñ‚Ñƒ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ Ð¼Ð¾Ð´ÑƒÐ»Ñ SCL Ð¿Ð¾ Ñ„Ð¾Ñ€Ð¼ÑƒÐ»Ðµ 10 000nS/(2*APB1) : 10 000ns/64ns = 156
+    I2C1->TRISE = 33;                           // (1000nS / 31nS)+1 [Standart_Mode = 1000nS, Fast_Mode = 300nS, 1/42MHz = 31nS]s
+    I2C1->CR1 |= I2C_CR1_PE;                    // Ð’ÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ Ð¼Ð¾Ð´ÑƒÐ»ÑŒ
 }
 
 
 void i2cWrite(uint8_t reg_addr, uint8_t data)
 {
-    // Ñòàðòóåì
+    /* Ð¡Ñ‚Ð°Ñ€Ñ‚ */
     I2C2->CR1 |= I2C_CR1_START;
-	while(!(I2C2->SR1 & I2C_SR1_SB));
-	(void) I2C2->SR1;
+    while(!(I2C2->SR1 & I2C_SR1_SB));
+    (void) I2C2->SR1;
 
-    // Ïåðåäàåì àäðåñ óñòðîéñòâà
-	I2C2->DR = AT24CXX_ADDR_WRITE;//I2C_ADDRESS(EEPROM_I2C_ADDR, I2C_MODE_WRITE);
-	while(!(I2C2->SR1 & I2C_SR1_ADDR));
-	(void) I2C2->SR1;
-	(void) I2C2->SR2;
+    /* ÐŸÐµÑ€ÐµÐ´Ð°Ñ‡Ð° Ð°Ð´Ñ€ÐµÑÐ° ÑƒÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð²Ð° */
+    I2C2->DR = AT24CXX_ADDR_WRITE;//I2C_ADDRESS(EEPROM_I2C_ADDR, I2C_MODE_WRITE);
+    while(!(I2C2->SR1 & I2C_SR1_ADDR));
+    (void) I2C2->SR1;
+    (void) I2C2->SR2;
 
-    // Ïåðåäàåì àäðåñ ðåãèñòðà
-	I2C2->DR = reg_addr;
-	while(!(I2C2->SR1 & I2C_SR1_TXE));
+    /* ÐŸÐµÑ€ÐµÐ´Ð°Ñ‡Ð° Ð°Ð´Ñ€ÐµÑÐ° Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð° */
+    I2C2->DR = reg_addr;
+    while(!(I2C2->SR1 & I2C_SR1_TXE));
 
-    // Ïèøåì äàííûå
-	I2C2->DR = data;
-	while(!(I2C2->SR1 & I2C_SR1_BTF));
-	I2C2->CR1 |= I2C_CR1_STOP;
+    /* Ð—Ð°Ð¿Ð¸ÑÑŒ Ð´Ð°Ð½Ð½Ñ‹Ñ… */
+    I2C2->DR = data;
+    while(!(I2C2->SR1 & I2C_SR1_BTF));
+    I2C2->CR1 |= I2C_CR1_STOP;
 }
 
 uint8_t i2cRead(uint8_t reg_addr)
 {
-	uint8_t data;
+    uint8_t data;
 
-	// Ñòàðòóåì
-	I2C2->CR1 |= I2C_CR1_START;
-	while(!(I2C2->SR1 & I2C_SR1_SB));
-	(void) I2C2->SR1;
+    /* Ð¡Ñ‚Ð°Ñ€Ñ‚ */
+    I2C2->CR1 |= I2C_CR1_START;
+    while(!(I2C2->SR1 & I2C_SR1_SB));
+    (void) I2C2->SR1;
 
-	// Ïåðåäàåì àäðåñ óñòðîéñòâà
-	I2C2->DR = AT24CXX_ADDR_WRITE;
-	while(!(I2C2->SR1 & I2C_SR1_ADDR));
-	(void) I2C2->SR1;
-	(void) I2C2->SR2;
+    /* ÐŸÐµÑ€ÐµÐ´Ð°Ñ‡Ð° Ð°Ð´Ñ€ÐµÑÐ° ÑƒÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð²Ð° */
+    I2C2->DR = AT24CXX_ADDR_WRITE;
+    while(!(I2C2->SR1 & I2C_SR1_ADDR));
+    (void) I2C2->SR1;
+    (void) I2C2->SR2;
 
-	// Ïåðåäàåì àäðåñ ðåãèñòðà
-	I2C2->DR = reg_addr;
-	while(!(I2C2->SR1 & I2C_SR1_TXE));
-	I2C2->CR1 |= I2C_CR1_STOP;
+    /* ÐŸÐµÑ€ÐµÐ´Ð°Ñ‡Ð° Ð°Ð´Ñ€ÐµÑÐ° Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð° */
+    I2C2->DR = reg_addr;
+    while(!(I2C2->SR1 & I2C_SR1_TXE));
+    I2C2->CR1 |= I2C_CR1_STOP;
 
-	// Ðåñòàðò!!!
-	I2C2->CR1 |= I2C_CR1_START;
-	while(!(I2C2->SR1 & I2C_SR1_SB));
-	(void) I2C2->SR1;
+    /* Ð ÐµÑÑ‚Ð°Ñ€Ñ‚ */
+    I2C2->CR1 |= I2C_CR1_START;
+    while(!(I2C2->SR1 & I2C_SR1_SB));
+    (void) I2C2->SR1;
 
-	// Ïåðåäàåì àäðåñ óñòðîéñòâà, íî òåïåðü äëÿ ÷òåíèÿ
-	I2C2->DR = AT24CXX_ADDR_READ;
-	while(!(I2C2->SR1 & I2C_SR1_ADDR));
-	(void) I2C2->SR1;
-	(void) I2C2->SR2;
+    /* ÐŸÐµÑ€ÐµÐ´Ð°Ñ‡Ð° Ð°Ð´Ñ€ÐµÑ ÑƒÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð²Ð°, Ð½Ð¾ Ñ‚ÐµÐ¿ÐµÑ€ÑŒ Ð´Ð»Ñ Ñ‡Ñ‚ÐµÐ½Ð¸Ñ */
+    I2C2->DR = AT24CXX_ADDR_READ;
+    while(!(I2C2->SR1 & I2C_SR1_ADDR));
+    (void) I2C2->SR1;
+    (void) I2C2->SR2;
 
-	// ×èòàåì
-	I2C2->CR1 &= ~I2C_CR1_ACK;
-	while(!(I2C2->SR1 & I2C_SR1_RXNE));
-	data = I2C2->DR;
-	I2C2->CR1 |= I2C_CR1_STOP;
+    /* Ð§Ñ‚ÐµÐ½Ð¸Ðµ */
+    I2C2->CR1 &= ~I2C_CR1_ACK;
+    while(!(I2C2->SR1 & I2C_SR1_RXNE));
+    data = I2C2->DR;
+    I2C2->CR1 |= I2C_CR1_STOP;
 
-	return data;
+    return data;
 }
 

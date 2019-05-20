@@ -9,8 +9,8 @@
 #define GPIO_OUTPUT 0x01
 #define GPIO_ALTER 0x02
 
-#define F_CPU 		32000000UL
-#define TimerTick  	F_CPU/1000-1	// Нам нужен килогерц
+#define F_CPU       32000000UL
+#define TimerTick   F_CPU/1000-1    // РљРёР»РѕРіРµСЂС†
 
 #define UART1_BAUD 9600UL
 #define UART2_BAUD 9600UL

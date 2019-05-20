@@ -4,61 +4,59 @@ volatile uint32_t sysTick = 0;
 
 uint32_t GetTick()
 {
-	return sysTick;
+    return sysTick;
 }
 
 void SysTick_Handler(void)
 {
-	sysTick++;
-	millis++;
+    sysTick++;
+    millis++;
 }
-
-volatile uint8_t ch = 0;
 
 void USART1_IRQHandler(void)
 {
-	/* ≈ÒÎË ˜ÚÓ-ÚÓ ÔË¯ÎÓ ‚ ·ÛÙÂ */
-	if ((USART1->CR1 & USART_CR1_RXNEIE) && (USART1->SR & USART_SR_RXNE))
-	{
-		USART1->SR &= ~USART_SR_RXNE;	// —·ÓÒ ÙÎ‡„‡
-		UART1_RXNE_Interrupt();
-	}
+    /* –ï—Å–ª–∏ —á—Ç–æ-—Ç–æ –ø—Ä–∏—à–ª–æ –≤ –±—É—Ñ–µ—Ä */
+    if ((USART1->CR1 & USART_CR1_RXNEIE) && (USART1->SR & USART_SR_RXNE))
+    {
+        USART1->SR &= ~USART_SR_RXNE;   // –°–±—Ä–æ—Å —Ñ–ª–∞–≥–∞
+        UART1_RXNE_Interrupt();
+    }
 
-	/* ≈ÒÎË ·ÛÙÂ ÓÔÛÒÚÓ¯ËÎÒˇ (ÓÚÔ‡‚ËÎË ·‡ÈÚ) */
-	if ((USART1->CR1 & USART_CR1_TXEIE) && (USART1->SR & USART_SR_TXE))
-	{
-		USART1->SR &= ~USART_SR_TXE;	// —·ÓÒ ÙÎ‡„‡
-		UART1_TXE_Interrupt();
-	}
+    /* –ï—Å–ª–∏ –±—É—Ñ–µ—Ä –æ–ø—É—Å—Ç–æ—à–∏–ª—Å—è (–æ—Ç–ø—Ä–∞–≤–∏–ª–∏ –±–∞–π—Ç) */
+    if ((USART1->CR1 & USART_CR1_TXEIE) && (USART1->SR & USART_SR_TXE))
+    {
+        USART1->SR &= ~USART_SR_TXE;    // –°–±—Ä–æ—Å —Ñ–ª–∞–≥–∞
+        UART1_TXE_Interrupt();
+    }
 
-	if ((USART1->CR1 & USART_CR1_TCIE) && (USART1->SR & USART_SR_TC))
-	{
-		USART1->SR &= ~USART_SR_TC;		// —·ÓÒ ÙÎ‡„‡
-		tx1Flag = 1;
-		START_UART1_READ;
-	}
+    if ((USART1->CR1 & USART_CR1_TCIE) && (USART1->SR & USART_SR_TC))
+    {
+        USART1->SR &= ~USART_SR_TC;     // –°–±—Ä–æ—Å —Ñ–ª–∞–≥–∞
+        tx1Flag = 1;
+        START_UART1_READ;
+    }
 }
 
 void USART2_IRQHandler(void)
 {
-	if ((USART2->CR1 & USART_CR1_RXNEIE) && (USART2->SR & USART_SR_RXNE))
-	{
-		USART2->SR &= ~USART_SR_RXNE;	// —·ÓÒ ÙÎ‡„‡
-		UART2_RXNE_Interrupt();
-	}
+    if ((USART2->CR1 & USART_CR1_RXNEIE) && (USART2->SR & USART_SR_RXNE))
+    {
+        USART2->SR &= ~USART_SR_RXNE;   // –°–±—Ä–æ—Å —Ñ–ª–∞–≥–∞
+        UART2_RXNE_Interrupt();
+    }
 
-	/* ≈ÒÎË ·ÛÙÂ ÓÔÛÒÚÓ¯ËÎÒˇ (ÓÚÔ‡‚ËÎË ·‡ÈÚ) */
-	if ((USART2->CR1 & USART_CR1_TXEIE) && (USART2->SR & USART_SR_TXE))
-	{
-		USART2->SR &= ~USART_SR_TXE;	// —·ÓÒ ÙÎ‡„‡
-		UART2_TXE_Interrupt();
-	}
+    /* –ï—Å–ª–∏ –±—É—Ñ–µ—Ä –æ–ø—É—Å—Ç–æ—à–∏–ª—Å—è (–æ—Ç–ø—Ä–∞–≤–∏–ª–∏ –±–∞–π—Ç) */
+    if ((USART2->CR1 & USART_CR1_TXEIE) && (USART2->SR & USART_SR_TXE))
+    {
+        USART2->SR &= ~USART_SR_TXE;    // –°–±—Ä–æ—Å —Ñ–ª–∞–≥–∞
+        UART2_TXE_Interrupt();
+    }
 
-	if ((USART2->CR1 & USART_CR1_TCIE) && (USART2->SR & USART_SR_TC))
-	{
-		USART2->SR &= ~USART_SR_TC;		// —·ÓÒ ÙÎ‡„‡
+    if ((USART2->CR1 & USART_CR1_TCIE) && (USART2->SR & USART_SR_TC))
+    {
+        USART2->SR &= ~USART_SR_TC;     // –°–±—Ä–æ—Å —Ñ–ª–∞–≥–∞
 
-		tx2Flag = 1;
-		START_UART2_READ;
-	}
+        tx2Flag = 1;
+        START_UART2_READ;
+    }
 }

@@ -6,20 +6,20 @@
 #define DIR_WRITE  PIN_ON(DIR_Port, DIR_Pin)
 #define DIR_READ   PIN_OFF(DIR_Port, DIR_Pin)
 
-#define START_UART1_SEND 	DIR_WRITE; 	tx1BufferIndex = 0; ENABLE_TX1
-#define START_UART1_READ 	DIR_READ;  	rx1BufferIndex = 0; ENABLE_RX1
-#define START_UART2_SEND 				tx2BufferIndex = 0; ENABLE_TX2
-#define START_UART2_READ 				rx2BufferIndex = 0; ENABLE_RX2
+#define START_UART1_SEND    DIR_WRITE;  tx1BufferIndex = 0; ENABLE_TX1
+#define START_UART1_READ    DIR_READ;   rx1BufferIndex = 0; ENABLE_RX1
+#define START_UART2_SEND                tx2BufferIndex = 0; ENABLE_TX2
+#define START_UART2_READ                rx2BufferIndex = 0; ENABLE_RX2
 
-#define ENABLE_RX1	USART1->CR1 =   (USART_CR1_UE | USART_CR1_RE | USART_CR1_RXNEIE)
-#define ENABLE_TX1	USART1->CR1 =   (USART_CR1_UE | USART_CR1_TE | USART_CR1_TXEIE)
-#define DISABLE_RX1	USART1->CR1 &= ~(USART_CR1_RE | USART_CR1_RXNEIE)
-#define DISABLE_TX1	USART1->CR1 &= ~(USART_CR1_TE | USART_CR1_TXEIE)
+#define ENABLE_RX1  USART1->CR1 =   (USART_CR1_UE | USART_CR1_RE | USART_CR1_RXNEIE)
+#define ENABLE_TX1  USART1->CR1 =   (USART_CR1_UE | USART_CR1_TE | USART_CR1_TXEIE)
+#define DISABLE_RX1 USART1->CR1 &= ~(USART_CR1_RE | USART_CR1_RXNEIE)
+#define DISABLE_TX1 USART1->CR1 &= ~(USART_CR1_TE | USART_CR1_TXEIE)
 
-#define ENABLE_RX2	USART2->CR1 =   (USART_CR1_UE | USART_CR1_RE | USART_CR1_RXNEIE)
-#define ENABLE_TX2	USART2->CR1 =   (USART_CR1_UE | USART_CR1_TE | USART_CR1_TXEIE)
-#define DISABLE_RX2	USART2->CR1 &= ~(USART_CR1_RE | USART_CR1_RXNEIE)
-#define DISABLE_TX2	USART2->CR1 &= ~(USART_CR1_TE | USART_CR1_TXEIE)
+#define ENABLE_RX2  USART2->CR1 =   (USART_CR1_UE | USART_CR1_RE | USART_CR1_RXNEIE)
+#define ENABLE_TX2  USART2->CR1 =   (USART_CR1_UE | USART_CR1_TE | USART_CR1_TXEIE)
+#define DISABLE_RX2 USART2->CR1 &= ~(USART_CR1_RE | USART_CR1_RXNEIE)
+#define DISABLE_TX2 USART2->CR1 &= ~(USART_CR1_TE | USART_CR1_TXEIE)
 
 #define DISABLE_UART1 USART1->CR1 = USART_CR1_UE
 #define DISABLE_UART2 USART2->CR1 = USART_CR1_UE
@@ -29,23 +29,23 @@
 #define SIZE_RX2_BUFFER 4
 #define SIZE_TX2_BUFFER 8
 
-#define NUMBER_TRY_RECIVE_RESPONSE 	20
-#define NUMBER_TRY_SET_COEF        	4
-#define NUMBER_BT_PARAM 			2		//  ÓÎ-‚Ó ·‡ÈÚ ‚ Ô‡‡ÏÂÚ‡ı ‚ Ô‡ÍÂÚÂ Bluetooth
-#define NUMBER_MEASURE 				20		//  ÓÎ-‚Ó Á‡ÏÂÓ‚ ‰Îˇ ÛÒÂ‰ÌÂÌËˇ ‚ÂÒ‡ ÔË Í‡ÎË·Ó‚ÍÂ
+#define NUMBER_TRY_RECIVE_RESPONSE  20
+#define NUMBER_TRY_SET_COEF         4
+#define NUMBER_BT_PARAM             2       // –ö–æ–ª-–≤–æ –±–∞–π—Ç –≤ –ø–∞—Ä–∞–º–µ—Ç—Ä–∞—Ö –≤ –ø–∞–∫–µ—Ç–µ Bluetooth
+#define NUMBER_MEASURE              20      // –ö–æ–ª-–≤–æ –∑–∞–º–µ—Ä–æ–≤ –¥–ª—è —É—Å—Ä–µ–¥–Ω–µ–Ω–∏—è –≤–µ—Å–∞ –ø—Ä–∏ –∫–∞–ª–∏–±—Ä–æ–≤–∫–µ
 
 #define SLAVE1_ID 101
 #define SLAVE2_ID 102
 #define SLAVE3_ID 103
 
-#define accuracy 		((int64_t)10000000)	// 0,0000001
-#define accuracy_scale  ((int64_t)100000)	// 0,00001
-#define MAX_ALPHA 		((int64_t)65536)	// Ã‡ÍÒËÏ‡Î¸ÌÓ ‚ÓÁÏÓÊÌ‡ˇ ‡Î¸Ù‡ ‰Îˇ ‘Õ◊
-#define K_ALPHA 		16					// ¡ËÚÌÓÒÚ¸ Ï‡ÍÒËÏ‡Î¸ÌÓÈ ‡Î¸Ù˚ ‰Îˇ ‘Õ◊
+#define accuracy        ((int64_t)10000000) // 0,0000001
+#define accuracy_scale  ((int64_t)100000)   // 0,00001
+#define MAX_ALPHA       ((int64_t)65536)    // –ú–∞–∫—Å–∏–º–∞–ª—å–Ω–æ –≤–æ–∑–º–æ–∂–Ω–∞—è –∞–ª—å—Ñ–∞ –¥–ª—è –§–ù–ß
+#define K_ALPHA         16                  // –ë–∏—Ç–Ω–æ—Å—Ç—å –º–∞–∫—Å–∏–º–∞–ª—å–Ω–æ–π –∞–ª—å—Ñ—ã –¥–ª—è –§–ù–ß
 
-#define com_get_weight      0	//  ÓÏ‡Ì‰‡ Á‡ÔÓÒ‡ ‚ÂÒ‡
-#define com_set_coefficient 1	//  ÓÏ‡Ì‰‡ ÛÒÚ‡ÌÓ‚ÍË ÍÓ˝ÙÙËˆËÂÌÚ‡
-#define com_get_coefficient 2	//  ÓÏ‡Ì‰‡ Á‡ÔÓÒ‡ ÍÓ˝ÙÙËˆËÂÌÚ‡
+#define com_get_weight      0   // –ö–æ–º–∞–Ω–¥–∞ –∑–∞–ø—Ä–æ—Å–∞ –≤–µ—Å–∞
+#define com_set_coefficient 1   // –ö–æ–º–∞–Ω–¥–∞ —É—Å—Ç–∞–Ω–æ–≤–∫–∏ –∫–æ—ç—Ñ—Ñ–∏—Ü–∏–µ–Ω—Ç–∞
+#define com_get_coefficient 2   // –ö–æ–º–∞–Ω–¥–∞ –∑–∞–ø—Ä–æ—Å–∞ –∫–æ—ç—Ñ—Ñ–∏—Ü–∏–µ–Ω—Ç–∞
 
 void UART_Init();
 void UART1_RXNE_Interrupt();
@@ -58,39 +58,39 @@ void RunSetCoefficient();
 
 typedef struct
 {
-	int64_t weight_1;			// ¬ÂÒ Ò ‰‡Ú˜ËÍ‡ 1
-	int64_t weight_1_offset;	// ¬ÂÒ Ú‡˚ ‰Îˇ 1 ‰‡Ú˜ËÍ‡
-	int64_t coefficient_1;		//  Ó˝ÙÙËˆËÂÌÚ 1 ‰‡Ú˜ËÍ‡
-	int64_t reserved_offset_1; 	//  ‡ÎË·Ó‚Ó˜Ì˚È offset 1 ‰‡Ú˜ËÍ‡
+    int64_t weight_1;           // –í–µ—Å —Å –¥–∞—Ç—á–∏–∫–∞ 1
+    int64_t weight_1_offset;    // –í–µ—Å —Ç–∞—Ä—ã –¥–ª—è 1 –¥–∞—Ç—á–∏–∫–∞
+    int64_t coefficient_1;      // –ö–æ—ç—Ñ—Ñ–∏—Ü–∏–µ–Ω—Ç 1 –¥–∞—Ç—á–∏–∫–∞
+    int64_t reserved_offset_1;  // –ö–∞–ª–∏–±—Ä–æ–≤–æ—á–Ω—ã–π offset 1 –¥–∞—Ç—á–∏–∫–∞
 
-	int64_t weight_2;			// ¬ÂÒ Ò ‰‡Ú˜ËÍ‡ 2
-	int64_t weight_2_offset;	// ¬ÂÒ Ú‡˚ ‰Îˇ 2 ‰‡Ú˜ËÍ‡
-	int64_t coefficient_2;		//  Ó˝ÙÙËˆËÂÌÚ 2 ‰‡Ú˜ËÍ‡
-	int64_t reserved_offset_2; 	//  ‡ÎË·Ó‚Ó˜Ì˚È offset 2 ‰‡Ú˜ËÍ‡
+    int64_t weight_2;           // –í–µ—Å —Å –¥–∞—Ç—á–∏–∫–∞ 2
+    int64_t weight_2_offset;    // –í–µ—Å —Ç–∞—Ä—ã –¥–ª—è 2 –¥–∞—Ç—á–∏–∫–∞
+    int64_t coefficient_2;      // –ö–æ—ç—Ñ—Ñ–∏—Ü–∏–µ–Ω—Ç 2 –¥–∞—Ç—á–∏–∫–∞
+    int64_t reserved_offset_2;  // –ö–∞–ª–∏–±—Ä–æ–≤–æ—á–Ω—ã–π offset 2 –¥–∞—Ç—á–∏–∫–∞
 
-	int64_t weight_3;			// ¬ÂÒ Ò ‰‡Ú˜ËÍ‡ 3
-	int64_t weight_3_offset;	// ¬ÂÒ Ú‡˚ ‰Îˇ 3 ‰‡Ú˜ËÍ‡
-	int64_t coefficient_3;		//  Ó˝ÙÙËˆËÂÌÚ 3 ‰‡Ú˜ËÍ‡
-	int64_t reserved_offset_3; 	//  ‡ÎË·Ó‚Ó˜Ì˚È offset 3 ‰‡Ú˜ËÍ‡
+    int64_t weight_3;           // –í–µ—Å —Å –¥–∞—Ç—á–∏–∫–∞ 3
+    int64_t weight_3_offset;    // –í–µ—Å —Ç–∞—Ä—ã –¥–ª—è 3 –¥–∞—Ç—á–∏–∫–∞
+    int64_t coefficient_3;      // –ö–æ—ç—Ñ—Ñ–∏—Ü–∏–µ–Ω—Ç 3 –¥–∞—Ç—á–∏–∫–∞
+    int64_t reserved_offset_3;  // –ö–∞–ª–∏–±—Ä–æ–≤–æ—á–Ω—ã–π offset 3 –¥–∞—Ç—á–∏–∫–∞
 
-	int64_t total_weight;		// —ÛÏÏ‡ ‚ÂÒÓ‚ Ò ÚÂı ‰‡Ú˜ËÍÓ‚ ·ÂÁ Û˜ÂÚ‡ Ú‡˚
+    int64_t total_weight;       // –°—É–º–º–∞ –≤–µ—Å–æ–≤ —Å —Ç—Ä–µ—Ö –¥–∞—Ç—á–∏–∫–æ–≤ –±–µ–∑ —É—á–µ—Ç–∞ —Ç–∞—Ä—ã
 
-	int64_t alpha;				//  Ó˝ÙÙËˆËÂÌÚ ‰Îˇ ‘Õ◊
-	int64_t scale;				//  Ó˝ÙÙËˆËÂÌÚ ¿÷œ ->  „
+    int64_t alpha;              // –ö–æ—ç—Ñ—Ñ–∏—Ü–∏–µ–Ω—Ç –¥–ª—è –§–ù–ß
+    int64_t scale;              // –ö–æ—ç—Ñ—Ñ–∏—Ü–∏–µ–Ω—Ç –ê–¶–ü -> –ö–≥
 
 } DataSensors;
 
 typedef union
 {
-	int32_t value;
-	uint8_t bytes[4];
+    int32_t value;
+    uint8_t bytes[4];
 } DataWeight;
 
 typedef struct
 {
-	uint8_t command;
-	uint8_t id;
-	uint8_t param[2];
+    uint8_t command;
+    uint8_t id;
+    uint8_t param[2];
 } bt_command_t;
 
 extern volatile uint8_t tx1BufferIndex;

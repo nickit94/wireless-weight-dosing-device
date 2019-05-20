@@ -2,193 +2,181 @@
 
 uint8_t ClockInit()
 {
-	/* ----------- Çàïóñê HSE ----------- */
-	RCC->CR |= RCC_CR_HSEON;
+    /* ----------- Ð—Ð°Ð¿ÑƒÑÐº HSE ----------- */
+    RCC->CR |= RCC_CR_HSEON;
 
-	for (uint32_t StartUpCounter = 0; ; StartUpCounter++)
-	{
-	    if (RCC->CR & RCC_CR_HSERDY) break;
+    for (uint32_t StartUpCounter = 0; ; StartUpCounter++)
+    {
+        if (RCC->CR & RCC_CR_HSERDY) break;
 
-	    /* Åñëè HSE íå ñòàðòóåò - âûõîä ñ îøèáêîé */
-	    if (StartUpCounter > 0x1000)
-	    {
-			RCC->CR &= ~RCC_CR_HSEON;	// Îñòàíîâêà HSE
-			return 1;
-	    }
-	}
+        /* Ð•ÑÐ»Ð¸ HSE Ð½Ðµ ÑÑ‚Ð°Ñ€Ñ‚ÑƒÐµÑ‚ - Ð²Ñ‹Ñ…Ð¾Ð´ Ñ Ð¾ÑˆÐ¸Ð±ÐºÐ¾Ð¹ */
+        if (StartUpCounter > 0x1000)
+        {
+            RCC->CR &= ~RCC_CR_HSEON;   // ÐžÑÑ‚Ð°Ð½Ð¾Ð²ÐºÐ° HSE
+            return 1;
+        }
+    }
 
-	/* ----------- Íàñòðîéêà è çàïóñê PLL ----------- */
-	RCC->CFGR |= RCC_CFGR_PLLMUL8 	// PLLMUL = 8
-			  |  RCC_CFGR_PLLDIV2 	// PLLDIV = 2
-			  |  RCC_CFGR_PLLSRC;	// Òàêòèðîâàíèå PLL îò HSE
-	RCC->CR   |= RCC_CR_PLLON;		// Çàïóñê PLL
-
-
-	for (uint32_t StartUpCounter = 0; ; StartUpCounter++)
-	{
-		if (RCC->CR & RCC_CR_PLLRDY) break;
-
-		/* Åñëè HSE íå ñòàðòóåò - âûõîä ñ îøèáêîé */
-		if (StartUpCounter > 0x1000)
-		{
-			RCC->CR &= ~RCC_CR_HSEON;	// Îñòàíîâêà HSE
-			RCC->CR &= ~RCC_CR_PLLON; 	// Îñòàíîâêà PLL
-			return 2;
-		}
-	}
-
-	/*----------- FLASH è Äåëèòåëè ----------- */
-	FLASH->ACR  = FLASH_ACR_ACC64;
-	FLASH->ACR |= FLASH_ACR_LATENCY 	// 1 Öèêë îæèäàíèÿ Flash, ò.ê. ÷àñòîòà 32 MHz
-			   |  FLASH_ACR_PRFTEN;	 	// Áóôåð ïðåäâàðèòåëüíîé âûáîðêè âêë, ò.ê. ÷àñòîòà > 24 MHz
+    /* ----------- ÐÐ°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ° Ð¸ Ð·Ð°Ð¿ÑƒÑÐº PLL ----------- */
+    RCC->CFGR |= RCC_CFGR_PLLMUL8   // PLLMUL = 8
+              |  RCC_CFGR_PLLDIV2   // PLLDIV = 2
+              |  RCC_CFGR_PLLSRC;   // Ð¢Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ PLL Ð¾Ñ‚ HSE
+    RCC->CR   |= RCC_CR_PLLON;      // Ð—Ð°Ð¿ÑƒÑÐº PLL
 
 
-	RCC->CFGR |= RCC_CFGR_PPRE2_DIV1 	// Äåëèòåëü øèíû APB2 = 1
-	          |  RCC_CFGR_PPRE1_DIV1 	// Äåëèòåëü øèíû APB1 = 1
-	          |  RCC_CFGR_HPRE_DIV1; 	// Äåëèòåëü AHB = 1
+    for (uint32_t StartUpCounter = 0; ; StartUpCounter++)
+    {
+        if (RCC->CR & RCC_CR_PLLRDY) break;
+
+        /* Ð•ÑÐ»Ð¸ HSE Ð½Ðµ ÑÑ‚Ð°Ñ€Ñ‚ÑƒÐµÑ‚ - Ð²Ñ‹Ñ…Ð¾Ð´ Ñ Ð¾ÑˆÐ¸Ð±ÐºÐ¾Ð¹ */
+        if (StartUpCounter > 0x1000)
+        {
+            RCC->CR &= ~RCC_CR_HSEON;   // ÐžÑÑ‚Ð°Ð½Ð¾Ð²ÐºÐ° HSE
+            RCC->CR &= ~RCC_CR_PLLON;   // ÐžÑÑ‚Ð°Ð½Ð¾Ð²ÐºÐ° PLL
+            return 2;
+        }
+    }
+
+    /*----------- FLASH Ð¸ Ð”ÐµÐ»Ð¸Ñ‚ÐµÐ»Ð¸ ----------- */
+    FLASH->ACR  = FLASH_ACR_ACC64;
+    FLASH->ACR |= FLASH_ACR_LATENCY     // 1 Ð¦Ð¸ÐºÐ» Ð¾Ð¶Ð¸Ð´Ð°Ð½Ð¸Ñ Flash, Ñ‚.Ðº. Ñ‡Ð°ÑÑ‚Ð¾Ñ‚Ð° 32 MHz
+               |  FLASH_ACR_PRFTEN;     // Ð‘ÑƒÑ„ÐµÑ€ Ð¿Ñ€ÐµÐ´Ð²Ð°Ñ€Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ð¾Ð¹ Ð²Ñ‹Ð±Ð¾Ñ€ÐºÐ¸ Ð²ÐºÐ», Ñ‚.Ðº. Ñ‡Ð°ÑÑ‚Ð¾Ñ‚Ð° > 24 MHz
 
 
-	/* ----------- Çàïóñê òàêòèðîâàíèÿ îò PLL ----------- */
-	RCC->CFGR |= RCC_CFGR_SW_PLL;								// Ïåðåêëþ÷àåìñÿ íà ðàáîòó îò PLL
-	while ((RCC->CFGR & RCC_CFGR_SWS_Msk) != RCC_CFGR_SWS_PLL);	// Îæèäàíèå ïåðåêëþ÷åíèÿ
+    RCC->CFGR |= RCC_CFGR_PPRE2_DIV1    // Ð”ÐµÐ»Ð¸Ñ‚ÐµÐ»ÑŒ ÑˆÐ¸Ð½Ñ‹ APB2 = 1
+              |  RCC_CFGR_PPRE1_DIV1    // Ð”ÐµÐ»Ð¸Ñ‚ÐµÐ»ÑŒ ÑˆÐ¸Ð½Ñ‹ APB1 = 1
+              |  RCC_CFGR_HPRE_DIV1;    // Ð”ÐµÐ»Ð¸Ñ‚ÐµÐ»ÑŒ AHB = 1
 
-	/* ----------- Îòêëþ÷åíèå íåíóæíîãî ----------- */
-	RCC->CR &= ~RCC_CR_HSION;									// Îòêëþ÷åíèå HSI ïîñëå çàïóñêà PLL
-	RCC->CR &= ~RCC_CR_MSION;									// Îòêëþ÷åíèå MSI ïîñëå çàïóñêà PLL
 
-	/* Óñïåõ */
-	return 0;
+    /* ----------- Ð—Ð°Ð¿ÑƒÑÐº Ñ‚Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ Ð¾Ñ‚ PLL ----------- */
+    RCC->CFGR |= RCC_CFGR_SW_PLL;                               // ÐŸÐµÑ€ÐµÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ÑÑ Ð½Ð° Ñ€Ð°Ð±Ð¾Ñ‚Ñƒ Ð¾Ñ‚ PLL
+    while ((RCC->CFGR & RCC_CFGR_SWS_Msk) != RCC_CFGR_SWS_PLL); // ÐžÐ¶Ð¸Ð´Ð°Ð½Ð¸Ðµ Ð¿ÐµÑ€ÐµÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ñ
+
+    /* ----------- ÐžÑ‚ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ Ð½ÐµÐ½ÑƒÐ¶Ð½Ð¾Ð³Ð¾ ----------- */
+    RCC->CR &= ~RCC_CR_HSION;                                   // ÐžÑ‚ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ HSI Ð¿Ð¾ÑÐ»Ðµ Ð·Ð°Ð¿ÑƒÑÐºÐ° PLL
+    RCC->CR &= ~RCC_CR_MSION;                                   // ÐžÑ‚ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ MSI Ð¿Ð¾ÑÐ»Ðµ Ð·Ð°Ð¿ÑƒÑÐºÐ° PLL
+
+    /* Ð£ÑÐ¿ÐµÑ… */
+    return 0;
 }
 void PortInit()
 {
-	/* Âêëþ÷åíèå òàêòèðîâàíèå íà ïîðòû A, B, C è H */
-	RCC->AHBENR |= RCC_AHBENR_GPIOAEN	// GPIOA Clock Enable
-				|  RCC_AHBENR_GPIOBEN	// GPIOB Clock Enable
-				|  RCC_AHBENR_GPIOCEN	// GPIOC Clock Enable
-				|  RCC_AHBENR_GPIOHEN;	// GPIOH Clock Enable
+    /* Ð’ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ Ñ‚Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð½Ð° Ð¿Ð¾Ñ€Ñ‚Ñ‹ A, B, C Ð¸ H */
+    RCC->AHBENR |= RCC_AHBENR_GPIOAEN   // GPIOA Clock Enable
+                |  RCC_AHBENR_GPIOBEN   // GPIOB Clock Enable
+                |  RCC_AHBENR_GPIOCEN   // GPIOC Clock Enable
+                |  RCC_AHBENR_GPIOHEN;  // GPIOH Clock Enable
 
-	/* PA0 - USR_BUT  - GPIO_Input */
-	GPIOA->MODER |= (GPIO_INPUT << GPIO_MODER_MODER0_Pos);		// USR_BUT  GPIO_Input
+    /* PA0 - USR_BUT  - GPIO_Input */
+    GPIOA->MODER |= (GPIO_INPUT << GPIO_MODER_MODER0_Pos);      // USR_BUT  GPIO_Input
 
-	/* PB7 - GRN_LED - GPIO_Output
-	 * PB6 - BLUE_LED - GPIO_Output */
-	GPIOB->MODER  |=  (GPIO_OUTPUT << GPIO_MODER_MODER6_Pos)	// GRN_LED GPIO_Output
-				  |   (GPIO_OUTPUT << GPIO_MODER_MODER7_Pos);	// BLUE_LED GPIO_Output
-	GPIOB->OTYPER &= ~(GPIO_OTYPER_OT_7 | GPIO_OTYPER_OT_8);	// GRN_LED and BLUE_LED Output push-pull
+    /* PB7 - GRN_LED - GPIO_Output
+     * PB6 - BLUE_LED - GPIO_Output */
+    GPIOB->MODER  |=  (GPIO_OUTPUT << GPIO_MODER_MODER6_Pos)    // GRN_LED GPIO_Output
+                  |   (GPIO_OUTPUT << GPIO_MODER_MODER7_Pos);   // BLUE_LED GPIO_Output
+    GPIOB->OTYPER &= ~(GPIO_OTYPER_OT_7 | GPIO_OTYPER_OT_8);    // GRN_LED and BLUE_LED Output push-pull
 
-	/* PC9 - DIR - GPIO_Output, Pull-up */
-	GPIOC->MODER   |= (GPIO_OUTPUT << GPIO_MODER_MODER9_Pos); 	// DIR GPIO_Output
-	GPIOC->OTYPER  &= ~GPIO_OTYPER_OT_9; 						// DIR Output push-pull
-	GPIOC->OSPEEDR |=  GPIO_OSPEEDER_OSPEEDR9;					// DIR Very high speed
-	GPIOC->PUPDR   |= (0x01 << GPIO_PUPDR_PUPDR9_Pos);			// DIR Pull-up
+    /* PC9 - DIR - GPIO_Output, Pull-up */
+    GPIOC->MODER   |= (GPIO_OUTPUT << GPIO_MODER_MODER9_Pos);   // DIR GPIO_Output
+    GPIOC->OTYPER  &= ~GPIO_OTYPER_OT_9;                        // DIR Output push-pull
+    GPIOC->OSPEEDR |=  GPIO_OSPEEDER_OSPEEDR9;                  // DIR Very high speed
+    GPIOC->PUPDR   |= (0x01 << GPIO_PUPDR_PUPDR9_Pos);          // DIR Pull-up
 }
 void UART1_Init()
 {
-	/* GPIO */
-	GPIOA->MODER   |= (GPIO_ALTER << GPIO_MODER_MODER9_Pos)		// UART1_TX Alternative Function
-				   |  (GPIO_ALTER << GPIO_MODER_MODER10_Pos); 	// UART1_RX Alternative Function
-	GPIOA->OSPEEDR |=  GPIO_OSPEEDER_OSPEEDR9;					// UART1_TX Very high speed
-	GPIOA->OTYPER  &= ~GPIO_OTYPER_OT_9;						// UART1_TX Output push-pull
-	GPIOA->PUPDR   &= ~GPIO_PUPDR_PUPDR10;						// UART1_RX No pull-up, pull-down
-	GPIOA->PUPDR   |= (0x01 << GPIO_PUPDR_PUPDR9_Pos);			// UART1_TX Pull-up
-	GPIOA->AFR[1]  |= (0x07 << GPIO_AFRH_AFSEL9_Pos)			// UART1_TX AFIO7
-				   |  (0x07 << GPIO_AFRH_AFSEL10_Pos);			// UART1_RX AFIO7
+    /* GPIO */
+    GPIOA->MODER   |= (GPIO_ALTER << GPIO_MODER_MODER9_Pos)     // UART1_TX Alternative Function
+                   |  (GPIO_ALTER << GPIO_MODER_MODER10_Pos);   // UART1_RX Alternative Function
+    GPIOA->OSPEEDR |=  GPIO_OSPEEDER_OSPEEDR9;                  // UART1_TX Very high speed
+    GPIOA->OTYPER  &= ~GPIO_OTYPER_OT_9;                        // UART1_TX Output push-pull
+    GPIOA->PUPDR   &= ~GPIO_PUPDR_PUPDR10;                      // UART1_RX No pull-up, pull-down
+    GPIOA->PUPDR   |= (0x01 << GPIO_PUPDR_PUPDR9_Pos);          // UART1_TX Pull-up
+    GPIOA->AFR[1]  |= (0x07 << GPIO_AFRH_AFSEL9_Pos)            // UART1_TX AFIO7
+                   |  (0x07 << GPIO_AFRH_AFSEL10_Pos);          // UART1_RX AFIO7
 
-	/* UART1 */
-	RCC->APB2ENR |= RCC_APB2ENR_USART1EN; 						// Ïîäàåì òàêòèðîâàíèå íà óàðò — 32Ìãö
+    /* UART1 */
+    RCC->APB2ENR |= RCC_APB2ENR_USART1EN;                       // ÐŸÐ¾Ð´Ð°ÐµÐ¼ Ñ‚Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð½Ð° ÑƒÐ°Ñ€Ñ‚ â€” 32ÐœÐ³Ñ†
 
-	USART1->BRR = (F_CPU + UART1_BAUD / 2) / UART1_BAUD;		// 9600
-	USART1->CR1 |= (USART_CR1_UE | USART_CR1_RE | USART_CR1_RXNEIE);	// Uart Enable, TX, RX
-	//USART1->CR1 |= USART_CR1_RXNEIE;							// RX Interrupt
+    USART1->BRR = (F_CPU + UART1_BAUD / 2) / UART1_BAUD;        // 9600
+    USART1->CR1 |= (USART_CR1_UE | USART_CR1_RE | USART_CR1_RXNEIE);    // Uart Enable, TX, RX
+    //USART1->CR1 |= USART_CR1_RXNEIE;                          // RX Interrupt
 
-	NVIC_EnableIRQ(USART1_IRQn); 								//Âêëþ÷àåì ïðåðûâàíèå, óêàçûâàåì âåêòîð
+    NVIC_EnableIRQ(USART1_IRQn);                                //Ð’ÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ Ð¿Ñ€ÐµÑ€Ñ‹Ð²Ð°Ð½Ð¸Ðµ, ÑƒÐºÐ°Ð·Ñ‹Ð²Ð°ÐµÐ¼ Ð²ÐµÐºÑ‚Ð¾Ñ€
 }
 void UART2_Init()
 {
-	/* GPIO */
-	GPIOA->MODER   |= (GPIO_ALTER << GPIO_MODER_MODER2_Pos)		// UART2_TX Alternative Function
-				   |  (GPIO_ALTER << GPIO_MODER_MODER3_Pos);	// UART2_RX Alternative Function
-	GPIOA->OSPEEDR |=  GPIO_OSPEEDER_OSPEEDR2;					// UART2_TX Very high speed
-	GPIOA->OTYPER  &= ~GPIO_OTYPER_OT_2;						// UART2_TX Output push-pull
-	GPIOA->PUPDR   &= ~GPIO_PUPDR_PUPDR3;						// UART2_RX No pull-up, pull-down
-	GPIOA->PUPDR   |= (0x01 << GPIO_PUPDR_PUPDR2_Pos);			// UART2_TX Pull-up
-	GPIOA->AFR[0]  |= (0x07 << GPIO_AFRL_AFSEL2_Pos)			// UART2_TX AFIO7
-				   |  (0x07 << GPIO_AFRL_AFSEL3_Pos);			// UART2_RX AFIO7
+    /* GPIO */
+    GPIOA->MODER   |= (GPIO_ALTER << GPIO_MODER_MODER2_Pos)     // UART2_TX Alternative Function
+                   |  (GPIO_ALTER << GPIO_MODER_MODER3_Pos);    // UART2_RX Alternative Function
+    GPIOA->OSPEEDR |=  GPIO_OSPEEDER_OSPEEDR2;                  // UART2_TX Very high speed
+    GPIOA->OTYPER  &= ~GPIO_OTYPER_OT_2;                        // UART2_TX Output push-pull
+    GPIOA->PUPDR   &= ~GPIO_PUPDR_PUPDR3;                       // UART2_RX No pull-up, pull-down
+    GPIOA->PUPDR   |= (0x01 << GPIO_PUPDR_PUPDR2_Pos);          // UART2_TX Pull-up
+    GPIOA->AFR[0]  |= (0x07 << GPIO_AFRL_AFSEL2_Pos)            // UART2_TX AFIO7
+                   |  (0x07 << GPIO_AFRL_AFSEL3_Pos);           // UART2_RX AFIO7
 
-	/* UART1 */
-	RCC->APB1ENR |= RCC_APB1ENR_USART2EN; 						// Ïîäàåì òàêòèðîâàíèå íà óàðò
+    /* UART1 */
+    RCC->APB1ENR |= RCC_APB1ENR_USART2EN;                       // ÐŸÐ¾Ð´Ð°ÐµÐ¼ Ñ‚Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð½Ð° ÑƒÐ°Ñ€Ñ‚
 
-	USART2->BRR = (F_CPU + UART2_BAUD / 2) / UART2_BAUD;		// 9600
-	USART2->CR1 |= USART_CR1_UE | USART_CR1_TE | USART_CR1_RE;	// Uart Enable, TX, RX
-	USART2->CR1 |= USART_CR1_RXNEIE;							// RX Interrupt
+    USART2->BRR = (F_CPU + UART2_BAUD / 2) / UART2_BAUD;        // 9600
+    USART2->CR1 |= USART_CR1_UE | USART_CR1_TE | USART_CR1_RE;  // Uart Enable, TX, RX
+    USART2->CR1 |= USART_CR1_RXNEIE;                            // RX Interrupt
 
-	NVIC_EnableIRQ(USART2_IRQn); 								//Âêëþ÷àåì ïðåðûâàíèå, óêàçûâàåì âåêòîð
+    NVIC_EnableIRQ(USART2_IRQn);                                //Ð’ÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ Ð¿Ñ€ÐµÑ€Ñ‹Ð²Ð°Ð½Ð¸Ðµ, ÑƒÐºÐ°Ð·Ñ‹Ð²Ð°ÐµÐ¼ Ð²ÐµÐºÑ‚Ð¾Ñ€
 }
 void IwdgInit()
 {
-	IWDG->KR  = 0x5555;		// Äîñòóï ê äðóãèì ðåãèñòðàì
-	IWDG->PR  = 5;			// Äåëèòåëü 128
-	IWDG->RLR = 1250;		// Ñ÷åò÷èê. Ðàç â 4 ñåêóíäû.
-	IWDG->KR  = 0xAAAA;		// Ïåðåçàïóñê
-	IWDG->KR  = 0xCCCC;		// Ñòàðò
+    IWDG->KR  = 0x5555;     // Ð”Ð¾ÑÑ‚ÑƒÐ¿ Ðº Ð´Ñ€ÑƒÐ³Ð¸Ð¼ Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð°Ð¼
+    IWDG->PR  = 5;          // Ð”ÐµÐ»Ð¸Ñ‚ÐµÐ»ÑŒ 128
+    IWDG->RLR = 1250;       // Ð¡Ñ‡ÐµÑ‚Ñ‡Ð¸Ðº. Ð Ð°Ð· Ð² 4 ÑÐµÐºÑƒÐ½Ð´Ñ‹.
+    IWDG->KR  = 0xAAAA;     // ÐŸÐµÑ€ÐµÐ·Ð°Ð¿ÑƒÑÐº
+    IWDG->KR  = 0xCCCC;     // Ð¡Ñ‚Ð°Ñ€Ñ‚
 }
 
 void IwdgReset()
 {
-	IWDG->KR = 0xAAAA;
+    IWDG->KR = 0xAAAA;
 }
 
 int main(void)
 {
-	ClockInit();
-	PortInit();
+    ClockInit();
+    PortInit();
 
-	SysTick_Config(TimerTick);
-	IwdgInit();
-	UART1_Init();
-	UART2_Init();
+    SysTick_Config(TimerTick);
+    IwdgInit();
+    UART1_Init();
+    UART2_Init();
+    i2cInit();
 
-	i2cInit();
-	fl_get_offset = 3;
-	swtimer_t ST_BLINK;
-	swTimerSet(&ST_BLINK, 0, 500);
+    while(1)
+    {
+        FSM_UART1();
+        FSM_UART2();
+        IwdgReset();
+    }
 
-	for (uint8_t i = 0; i < 10; i++)
-	{
-		PIN_TOGGLE(GRN_LED_Port, GRN_LED_Pin);
-		PIN_TOGGLE(BLUE_LED_Port, BLUE_LED_Pin);
-		Delay(500000);
-	}
-
-	while(1)
-	{
-		FSM_UART1();
-		FSM_UART2();
-		if (swTimerCheck(&ST_BLINK)) { PIN_TOGGLE(GRN_LED_Port, GRN_LED_Pin); }
-		i2cRead(0x20);
-		IwdgReset();
-	}
-
-	return 0;
+    return 0;
 }
 
+/* ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð½Ð°ÑÑ‚Ñ€Ð¾ÐµÐ½Ð½Ð¾Ð¹ Ñ‡Ð°ÑÑ‚Ð¾Ñ‚Ñ‹ */
 void mco_init(void)
 {
-	/* Ïðîâåðêà òàêòèðîâàíèÿ - PLL, äåëåííûé íà 16 íà A8 */
-	RCC->AHBENR |= RCC_AHBENR_GPIOAEN; // âêëþ÷àåì òàêòèðîâàíèå ïîðòà À
+    /* ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ñ‚Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ - PLL, Ð´ÐµÐ»ÐµÐ½Ð½Ñ‹Ð¹ Ð½Ð° 16 Ð½Ð° A8 */
+    RCC->AHBENR |= RCC_AHBENR_GPIOAEN;                      // Ð’ÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ Ñ‚Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð¿Ð¾Ñ€Ñ‚Ð° Ð
 
-	GPIOA->OTYPER  &= ~GPIO_OTYPER_OT_8;  // Ñáðàñûâàåì áèòû CNF äëÿ áèòà 8. Ðåæèì 00 - Push-Pull
-	GPIOA->MODER |= (GPIO_ALTER << GPIO_MODER_MODER8_Pos); // Ñòàâèì ðåæèì äëÿ 8 ãî áèòà ðåæèì CNF  = 10 (àëüòåðíàòèâíàÿ ôóíêöèÿ, Push-Pull)
-	GPIOA->AFR[0] &= ~GPIO_AFRL_AFSEL0;	// Ñáðàñûâàåì áèòû MODE äëÿ áèòà 8
-	GPIOA->OSPEEDR |=  GPIO_OSPEEDER_OSPEEDR8;	// Âûñòàâëÿåì áèò MODE äëÿ ïÿòîãî ïèíà. Ðåæèì MODE11 = Max Speed 50MHz
+    GPIOA->OTYPER  &= ~GPIO_OTYPER_OT_8;                    // Ð¡Ð±Ñ€Ð°ÑÑ‹Ð²Ð°ÐµÐ¼ Ð±Ð¸Ñ‚Ñ‹ CNF Ð´Ð»Ñ Ð±Ð¸Ñ‚Ð° 8. Ð ÐµÐ¶Ð¸Ð¼ 00 - Push-Pull
+    GPIOA->MODER |= (GPIO_ALTER << GPIO_MODER_MODER8_Pos);  // Ð¡Ñ‚Ð°Ð²Ð¸Ð¼ Ñ€ÐµÐ¶Ð¸Ð¼ Ð´Ð»Ñ 8 Ð³Ð¾ Ð±Ð¸Ñ‚Ð° Ñ€ÐµÐ¶Ð¸Ð¼ CNF  = 10 (Ð°Ð»ÑŒÑ‚ÐµÑ€Ð½Ð°Ñ‚Ð¸Ð²Ð½Ð°Ñ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ñ, Push-Pull)
+    GPIOA->AFR[0] &= ~GPIO_AFRL_AFSEL0;                     // Ð¡Ð±Ñ€Ð°ÑÑ‹Ð²Ð°ÐµÐ¼ Ð±Ð¸Ñ‚Ñ‹ MODE Ð´Ð»Ñ Ð±Ð¸Ñ‚Ð° 8
+    GPIOA->OSPEEDR |=  GPIO_OSPEEDER_OSPEEDR8;              // Ð’Ñ‹ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð±Ð¸Ñ‚ MODE Ð´Ð»Ñ Ð¿ÑÑ‚Ð¾Ð³Ð¾ Ð¿Ð¸Ð½Ð°. Ð ÐµÐ¶Ð¸Ð¼ MODE11 = Max Speed 50MHz
 
-	RCC->CFGR |= RCC_CFGR_MCOPRE_DIV16;	// Microcontroller clock output prescaler
-	RCC->CFGR |= RCC_CFGR_MCOSEL_SYSCLK;	// Microcontroller clock output selection
+    RCC->CFGR |= RCC_CFGR_MCOPRE_DIV16;                     // MCO prescaler
+    RCC->CFGR |= RCC_CFGR_MCOSEL_SYSCLK;                    // MCO selection
 }
 void Delay(uint32_t Val)
 {
-	for( ; Val != 0; Val--)
-	{
-		asm("nop");
-	}
+    for( ; Val != 0; Val--)
+    {
+        asm("nop");
+    }
 }

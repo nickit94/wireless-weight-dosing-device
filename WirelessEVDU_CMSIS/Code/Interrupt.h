@@ -5,4 +5,4 @@
 
 uint32_t GetTick();
 
-#endif	/* INTERRUPT_H_ */
+#endif  /* INTERRUPT_H_ */
